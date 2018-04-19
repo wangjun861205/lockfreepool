@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"runtime"
 	"sync"
 	"sync/atomic"
 	"time"
@@ -87,6 +88,7 @@ func (p *Pool) Pop() Element {
 		default:
 			elem := atomic.SwapPointer(pointer, nil)
 			if elem == nil {
+				runtime.Gosched()
 				continue
 			}
 			ep := (*Element)(elem)
